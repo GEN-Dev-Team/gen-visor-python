@@ -1,7 +1,7 @@
 # server.py
 import os
 import requests
-from flask import Flask, jsonify, abort
+from flask import Flask, jsonify, abort, request
 from flask_cors import CORS  # pip install flask-cors
 
 # Lee credenciales desde variables de entorno
@@ -61,6 +61,16 @@ def get_model_urn():
     if not APS_MODEL_URN:
         abort(500, description="APS_MODEL_URN no está configurada")
     return jsonify(urn=APS_MODEL_URN)
+
+@app.route("/api/aps/model-urn/custom")
+def get_custom_model_urn():
+    urn = request.args.get("model_urn")
+
+    if not urn:
+        abort(400, description="Falta el parámetro 'model_urn'")
+
+    return jsonify(urn=urn)
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
